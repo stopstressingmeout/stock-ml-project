@@ -1,4 +1,5 @@
 import pandas as pd
+from scipy import stats
 import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.pipeline import Pipeline
@@ -19,7 +20,8 @@ df.drop(columns=['Unnamed: 0'], inplace=True)
 
 # Handle missing values
 df.ffill(inplace=True)
-
+#Outlier removal
+df = df[(np.abs(stats.zscore(df.select_dtypes(include=[np.number]))) < 3).all(axis=1)]
 # Feature engineering
 df['Day'] = df['Date'].dt.day
 df['Month'] = df['Date'].dt.month
